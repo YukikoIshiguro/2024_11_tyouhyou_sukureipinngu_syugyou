@@ -1,0 +1,17 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+
+# ChromeDriverのパスを指定
+driver_path = r"C:\Users\yukik\Desktop\chromedriver.exe"
+service = Service(driver_path)
+
+# WebDriverを起動
+driver = webdriver.Chrome(service=service)
+
+# 開きたいURL
+url = "https://note.com/yukiko_python/n/na9e2a63390f3"
+driver.get(url)
+
+# 必要に応じて終了
+# driver.quit()
+#白い画面だけでる、seleniumは動く202411/11_19:43
