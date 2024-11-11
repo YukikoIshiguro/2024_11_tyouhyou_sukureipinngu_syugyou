@@ -1,0 +1,20 @@
+from selenium import webdriver
+
+# Selenium 4.6以降では、WebDriverが自動的に管理される
+driver = webdriver.Chrome()  #ChromeDriverの手動インストール不要
+driver.get("https://www.google.com")
+
+# Googleのタイトルを出力
+print(driver.title)
+
+# ブラウザを閉じる
+driver.quit()
+
+#MEMO
+#日付 2023年11月11日
+##Seleniumを使う際に通常必要となるChromeDriverなどのWebDriverを使用しない方法として、Selenium Managerと**webdriver-manager ライブラリ**を使用する方法があります。また、最近のSelenium 4.6以降では、Selenium Managerが自動的にブラウザドライバーを管理してくれるため、手動でドライバーをダウンロードする必要がなくなりました。
+
+#Selenium Managerを使った方法をやってみた。
+#Selenium Managerを使う方法（Selenium 4.6以降）
+#Selenium 4.6からは、Selenium Managerという新機能が導入されました。これにより、Pythonコード内で自動的にChromeDriverや他のブラウザドライバーが管理されます。
+#2024_11月11日_20時59_Selenium動作確認OK
