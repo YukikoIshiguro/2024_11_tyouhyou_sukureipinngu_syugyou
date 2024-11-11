@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
-# ChromeDriverのパスを指定
+# ChromeDriverのパスを指定が動かないので参考にしないように
 driver_path = r"C:\Users\yukik\Desktop\chromedriver.exe"
 service = Service(driver_path)
 
