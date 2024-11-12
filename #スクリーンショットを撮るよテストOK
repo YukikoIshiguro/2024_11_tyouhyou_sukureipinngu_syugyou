@@ -1,0 +1,15 @@
+import pyautogui　#スクリーンショットを撮るよテストOK
+from PIL import Image
+
+# スクリーンショットを撮る範囲を指定 (x, y, width, height)
+x, y, width, height = 100, 100, 500, 400  # 必要に応じて変更
+
+# スクリーンショットを範囲指定して取得
+screenshot = pyautogui.screenshot(region=(x, y, width, height))
+
+# スクリーンショットを保存する
+screenshot.save("screenshot.png")
+print("スクリーンショットを保存しました。")
+
+# スクリーンショットを表示（任意）
+screenshot.show()
