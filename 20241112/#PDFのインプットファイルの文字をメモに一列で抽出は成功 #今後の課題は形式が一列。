@@ -1,0 +1,47 @@
+# 必要なライブラリのインポート
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+import io
+
+# PDFファイルと出力するテキストファイルのパス
+pdf_path = 'C:/Users/yukik/Desktop/1112kakidasirist.pdf'   # 正しいファイルパス
+output_txt_path = r'C:\Users\yukik\Desktop\kakidasi.txt'
+
+# テキストを抽出する関数
+def extract_text_with_pdfminer(pdf_path, output_txt_path):
+    # リソースマネージャとLAParamsの設定
+    resource_manager = PDFResourceManager()
+    laparams = LAParams()
+
+    # テキスト抽出用のストリームとテキストコンバーターの設定
+    output_string = io.StringIO()
+    device = TextConverter(resource_manager, output_string, laparams=laparams)
+
+    # インタープリターの設定
+    interpreter = PDFPageInterpreter(resource_manager, device)
+
+    # PDFファイルを開き、ページごとにテキストを抽出
+    with open(pdf_path, 'rb') as input_file:
+        for page in PDFPage.get_pages(input_file):
+            interpreter.process_page(page)
+
+    # テキスト抽出完了後の後処理
+    text = output_string.getvalue()
+    device.close()
+    output_string.close()
+
+    # デバッグプリントでテキストを確認
+    print("抽出されたテキスト：")
+    print(text)  # ここでテキストを表示してデバッグ
+
+    # テキストをファイルに書き出し
+    with open(output_txt_path, 'w', encoding='utf-8') as output_file:
+        output_file.write(text)
+    print(f"PDFから抽出したテキストが '{output_txt_path}' に保存されました！")
+
+# 関数を実行してテキストを抽出
+extract_text_with_pdfminer(pdf_path, output_txt_path)
+#PDFのインプットファイルの文字をメモに一列で抽出は成功
+#今後の課題は形式が一列。
