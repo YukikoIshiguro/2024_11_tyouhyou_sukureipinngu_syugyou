@@ -1,4 +1,4 @@
-import pyautogui　#スクリーンショットを撮るよテストOK
+import pyautogui
 from PIL import Image
 
 # スクリーンショットを撮る範囲を指定 (x, y, width, height)
