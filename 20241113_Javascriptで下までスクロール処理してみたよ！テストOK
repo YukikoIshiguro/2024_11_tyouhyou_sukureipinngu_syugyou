@@ -1,0 +1,79 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+
+# ChromeDriverの自動管理
+driver = webdriver.Chrome()
+driver.get("https://www.instagram.com/?locale=ja_JP")
+
+# インスタのタイトルを出力
+print(driver.title)
+
+# 5秒間待機（ページが完全に読み込まれるのを待つ）
+time.sleep(5)
+
+try:
+    # 1. ユーザー名フィールドの入力（動的待機を追加）
+    username_field = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, 'input[name="username"]'))
+    )
+    username_field.clear()
+    username_field.send_keys("yukiko_smile_1026")
+
+    # 2. パスワードフィールドの入力（動的待機を追加）
+    password_field = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, 'input[name="password"]'))
+    )
+    password_field.clear()
+    password_field.send_keys("wmga1026")
+
+    # 3. ログインボタンのクリック（動的待機を追加）
+    login_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[type="submit"]'))
+    )
+    login_button.click()
+    print("ログインボタンをクリックしました")
+
+    # 4. 「情報を保存」というボタンを探してクリック
+    try:
+        save_info_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), '情報を保存')]"))
+        )
+        save_info_button.click()
+        print("「情報を保存」をクリックしました")
+    except Exception as e:
+        print(f"「情報を保存」ボタンのクリックに失敗しました: {e}")
+
+    # ログイン処理の確認のために少し待機
+    time.sleep(5)
+
+    # ページ全体をスクロール
+    last_height = driver.execute_script("return document.body.scrollHeight")
+
+    while True:
+        # ページをスクロールダウン
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        
+        # 新しい投稿がロードされるのを待つ
+        time.sleep(3)
+
+        # 新しいページの高さを取得
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        
+        # ページの高さが変わっていなければスクロール終了
+        if new_height == last_height:
+            break
+        last_height = new_height
+
+    print("ページの最後までスクロールしました")
+
+except Exception as e:
+    print(f"エラーが発生しました: {e}")
+
+finally:
+    # ブラウザを閉じる
+    driver.quit()
+#2024/11/13Javascriptで下までスクロール処理してみたよ！テストOK
