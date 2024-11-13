@@ -1,0 +1,44 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+
+# Seleniumでブラウザを起動
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
+# YouTube動画ページにアクセス
+url = "https://www.youtube.com/watch?v=j149xpasByg"
+#https://www.youtube.com/watch?v=j149xpasBygとか任意のURL入れる
+driver.get(url)
+
+try:
+    # 明示的な待機を使用して、動画プレイヤー要素が見つかるまで待機
+    play_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.ytp-large-play-button'))
+    )
+    
+    # Playボタンをクリックして動画を再生
+    play_button.click()
+    
+    # 動画の長さを取得
+    duration_element = driver.find_element(By.CSS_SELECTOR, 'span.ytp-time-duration')
+    duration = duration_element.text.split(':')
+    if len(duration) == 2:
+        # 例: "4:20" -> 4*60 + 20 = 260秒
+        total_seconds = int(duration[0]) * 60 + int(duration[1])
+    elif len(duration) == 3:
+        # 例: "1:02:03" -> 1*3600 + 2*60 + 3 = 3723秒
+        total_seconds = int(duration[0]) * 3600 + int(duration[1]) * 60 + int(duration[2])
+
+    # 動画の再生が終わるまで待機
+    time.sleep(total_seconds + 5)  # 余裕を持たせて+5秒待機
+
+except Exception as e:
+    print(f"Error: {e}")
+
+finally:
+    # ブラウザを閉じる
+    driver.quit()
