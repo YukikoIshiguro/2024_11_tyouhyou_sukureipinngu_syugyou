@@ -1,0 +1,30 @@
+import pytesseract
+from PIL import Image
+import sys
+
+
+#pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+
+# Tesseract OCRのパスを指定（インストール場所に合わせて変更）
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\yukik\AppData\Local\Programs\Tesseract-OCR"
+
+def image_to_text(image_path):
+    # 画像を読み込む
+    img = Image.open(image_path)
+
+    # TesseractでOCRを実行
+    text = pytesseract.image_to_string(img, lang='jpn')  # 日本語を指定
+
+    return text
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        image_path = sys.argv[1]  # コマンドライン引数から画像ファイルのパスを取得
+        text = image_to_text(image_path)
+        print("読み取ったテキスト:\n", text)
+    else:
+        print("Usage: python app.py <path_to_image>")
+
+
+#ython 1113_ocr.py "C:\Users\yukik\Downloads\帳票スクレイピングのサンプル画像.png"
