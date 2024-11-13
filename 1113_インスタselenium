@@ -1,0 +1,40 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
+
+# Selenium 4.6以降では、WebDriverが自動的に管理される
+driver = webdriver.Chrome()  # ChromeDriverの手動インストール不要
+driver.get("https://www.instagram.com/?locale=ja_JP")
+
+# インスタのタイトルを出力
+print(driver.title)
+
+# 5秒間待機（必要に応じて調整）
+time.sleep(5)
+
+# XPathで入力フィールドを見つけて文字を入力
+try:
+    # 要素をXPathで探すインスタの上の方
+    input_field = driver.find_element(By.XPATH, '//*[@id="loginForm"]/div/div[1]/div/label/input')
+    #//*[@id="loginForm"]/div/div[1]/div/label/inputがｘｐａｔｈにあったよ！
+    # テキストを入力
+    input_text = "yukiko_smile_1026"  # 入力したい文字
+    input_field.send_keys(input_text)
+    
+    # 要素をXPathで探すインスタの下の方
+    input_field = driver.find_element(By.XPATH, '//*[@id="loginForm"]/div/div[2]/div/label/input')
+    #//*[@id="loginForm"]/div/div[1]/div/label/inputがｘｐａｔｈにあったよ！
+    # テキストを入力
+    input_text2 = "wmga1026"  # 入力したい文字
+    input_field.send_keys(input_text2)
+
+    # 確認のため少し待機
+    time.sleep(3)
+
+    # 必要であればEnterキーを送信する
+    #input_field.send_keys(Keys.RETURN)
+
+finally:
+    # 終了する前に少し待機して閉じる
+    driver.quit()
