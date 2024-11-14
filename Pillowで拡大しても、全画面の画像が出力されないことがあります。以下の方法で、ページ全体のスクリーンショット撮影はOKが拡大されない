@@ -1,0 +1,50 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+from PIL import Image
+import io
+from datetime import datetime
+
+# Seleniumでブラウザを起動
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
+# YouTube動画ページにアクセス
+url = "https://www.youtube.com/watch?v=j149xpasByg"
+driver.get(url)
+
+try:
+    # 明示的な待機を使用して、動画プレイヤー要素が見つかるまで待機
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, 'video.html5-main-video'))
+    )
+    
+    # スクリーンショットを撮る
+    screenshot = driver.get_screenshot_as_png()
+
+    # Pillowで画像を読み込む
+    image = Image.open(io.BytesIO(screenshot))
+
+    # 画像を拡大する（5倍にする例）
+    width, height = image.size
+    new_size = (width *5 , height * 5)  # 5倍に拡大
+    enlarged_image = image.resize(new_size, Image.LANCZOS)
+
+    # 今日の日付を取得し、ファイル名に使用
+    today = datetime.now().strftime("%Y-%m-%d")
+    filename = f"ゆきまるさん5倍拡大_{today}.png"
+
+    # 拡大した画像を保存
+    enlarged_image.save(filename)
+
+    print(f"拡大した画像を '{filename}' として保存しました。")
+
+except Exception as e:
+    print(f"Error: {e}")
+
+finally:
+    # ブラウザを閉じる
+    driver.quit()
