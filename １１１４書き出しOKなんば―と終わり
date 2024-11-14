@@ -1,0 +1,39 @@
+import fitz  # PyMuPDFをインポート
+import os
+
+# PDFファイルのパス
+pdf_path = 'C:/Users/yukik/Desktop/1112kakidasirist.pdf'
+output_txt_path = r'C:\Users\yukik\Desktop\kakidasi.txt'
+
+# 出力先のフォルダが存在しない場合、作成する
+output_folder = os.path.dirname(output_txt_path)
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+    print(f"フォルダ '{output_folder}' を作成しました。")
+
+try:
+    # PDFを開いてテキストを抽出
+    print(f"PDFファイル '{pdf_path}' を開いています...")
+    with fitz.open(pdf_path) as pdf:
+        with open(output_txt_path, 'w', encoding='utf-8') as output_file:
+            print(f"出力ファイル '{output_txt_path}' を作成しています...")
+            for page_num in range(pdf.page_count):
+                print(f"ページ {page_num + 1} を処理しています...")
+                page = pdf[page_num]
+                
+                # 単純なテキスト抽出（レイアウトの保持なし）
+                text = page.get_text("text")
+                
+                # ページごとに区切りを入れて保存
+                output_file.write(f"--- Page {page_num + 1} ---\n")
+                if text.strip():  # 抽出されたテキストが空でない場合
+                    output_file.write(text)
+                    print(f"書き出しテキスト: {text[:50]}...")  # 最初の50文字をデバッグ表示
+                else:
+                    print(f"ページ {page_num + 1} にテキストが見つかりませんでした。")
+                output_file.write(f"\n--- End of Page {page_num + 1} ---\n\n")
+                
+            print("すべてのページを処理しました。")
+    print("テキスト抽出が完了しました。")
+except Exception as e:
+    print(f"エラーが発生しました: {e}")
