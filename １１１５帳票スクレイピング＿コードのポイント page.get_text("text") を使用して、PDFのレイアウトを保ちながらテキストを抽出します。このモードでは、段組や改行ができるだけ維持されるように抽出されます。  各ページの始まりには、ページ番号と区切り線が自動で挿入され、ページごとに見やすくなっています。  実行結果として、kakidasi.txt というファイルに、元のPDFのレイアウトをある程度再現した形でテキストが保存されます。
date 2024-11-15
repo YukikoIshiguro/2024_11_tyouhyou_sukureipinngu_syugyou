@@ -1,0 +1,50 @@
+import fitz  # PyMuPDFをインポート
+import os
+
+# PDFファイルのパス
+pdf_path = 'C:/Users/yukik/Desktop/1112kakidasirist.pdf'
+# 保存先のテキストファイルパス
+output_txt_path = r'C:\Users\yukik\Desktop\kakidasi.txt'
+
+# 出力先のフォルダが存在しない場合、作成する
+output_folder = os.path.dirname(output_txt_path)
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+    print(f"フォルダ '{output_folder}' を作成しました。")
+
+
+def extract_text_with_layout(pdf_path, txt_output_path):
+    print(f"PDFファイル '{pdf_path}' を開いています...")
+    # PDFファイルを開く
+    with fitz.open(pdf_path) as pdf:
+        print(f"{pdf.page_count} ページのPDFファイルを読み込みました。")
+
+        # テキストファイルを開く（書き込みモード）
+        with open(txt_output_path, 'w', encoding='utf-8') as txt_file:
+            print(f"出力先テキストファイル '{txt_output_path}' を作成しました。")
+
+            # 各ページからテキストを抽出
+            for page_num in range(pdf.page_count):
+                print(f"ページ {page_num + 1} を処理しています...")
+                page = pdf[page_num]
+
+                # レイアウトを保ちながらテキストを取得
+                text = page.get_text("text")  # "text" モードで抽出
+                if text:
+                    print(f"ページ {page_num + 1} のテキストを取得しました。")
+                    # デバッグ用: テキストの最初の100文字だけを表示
+                    print(f"ページ {page_num + 1} のテキスト内容の一部:\n{text[:100]}...\n")
+                else:
+                    print(f"ページ {page_num + 1} にテキストが見つかりませんでした。")
+
+                # ページ番号をメモの見出しとして追加
+                txt_file.write(f"--- Page {page_num + 1} ---\n")
+                txt_file.write(text)
+                txt_file.write("\n" + "=" * 40 + "\n\n")  # ページの区切り
+
+            print("すべてのページの処理が完了しました。")
+    print("PDFからのテキスト抽出が完了しました。")
+
+
+# 関数を実行
+extract_text_with_layout(pdf_path, output_txt_path)
