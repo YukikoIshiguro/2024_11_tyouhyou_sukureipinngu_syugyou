@@ -1,0 +1,37 @@
+import os
+from datetime import datetime
+
+
+def create_folder_with_user_input(base_path):
+    # ユーザーにフォルダ名を入力させる
+    folder_name = input("フォルダ名を入力してください（空欄の場合はデフォルト名を使用します）: ").strip()
+
+    # 空欄の場合は日付とデフォルト名を使用
+    if not folder_name:
+        today = datetime.now().strftime("%Y-%m-%d")
+        folder_name = f"{today}_hogehoge"
+
+    # 連番を管理する変数
+    counter = 1
+    while True:
+        # フォルダ名に連番を付与（必要な場合）
+        if counter == 1:
+            final_folder_name = folder_name
+        else:
+            final_folder_name = f"{folder_name}_{counter}"
+
+        folder_path = os.path.join(base_path, final_folder_name)
+
+        # フォルダが存在しない場合は作成
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+            print(f"フォルダを作成しました: {folder_path}")
+            break
+        else:
+            # 存在する場合はカウンターを増加
+            counter += 1
+
+
+# 実行
+base_path = r"C:\Users\yukik\Downloads\test"  # フォルダを作成する親ディレクトリ
+create_folder_with_user_input(base_path)
