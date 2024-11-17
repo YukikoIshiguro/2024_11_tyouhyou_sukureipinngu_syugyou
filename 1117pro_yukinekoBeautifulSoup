@@ -1,0 +1,47 @@
+import requests
+from bs4 import BeautifulSoup
+from lxml import etree
+import os
+
+
+def download_image(url, save_path):
+    """
+    画像を指定されたパスに保存する関数
+    """
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        with open(save_path, 'wb') as file:
+            for chunk in response.iter_content(1024):
+                file.write(chunk)
+        print(f"画像を保存しました: {save_path}")
+    else:
+        print("画像のダウンロードに失敗しました。")
+
+
+# 1. 画像が含まれるページのURL
+page_url = "https://crea.bunshun.jp/articles/photo/39904"
+
+# 2. WebページのHTMLを取得
+response = requests.get(page_url)
+response.raise_for_status()  # ステータスコードがエラーの場合、例外を発生させる
+
+# 3. BeautifulSoupでパース
+soup = BeautifulSoup(response.content, 'lxml')
+
+# 4. BeautifulSoupオブジェクトをlxmlのetreeオブジェクトに変換
+dom = etree.HTML(str(soup))
+
+# 5. XPathを使って画像のURLを取得
+img_element = dom.xpath('//*[@id="content"]/div/div[1]/section[1]/article/div/div[1]/div[1]/div/div[1]/img')
+
+if img_element and 'src' in img_element[0].attrib:
+    # 画像URLの取得
+    img_url = img_element[0].attrib['src']
+    print(f"画像のURLを取得しました: {img_url}")
+
+    # 6. 画像の保存
+    # ここで「ゆきねこ.jpg」という名前で保存
+    save_path = "ゆきねこ.jpg"
+    download_image(img_url, save_path)
+else:
+    print("指定されたXPathで画像が見つかりませんでした。")
