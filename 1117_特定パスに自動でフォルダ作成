@@ -1,0 +1,21 @@
+import os
+from datetime import datetime
+
+
+def create_folder_in_specific_path(base_path):
+    # 現在の日付を取得してフォーマットする (例: "2024-11-17")
+    today = datetime.now().strftime("%Y-%m-%d")
+    folder_name = f"{today}_hogehoge"
+    folder_path = os.path.join(base_path, folder_name)
+
+    # フォルダが存在しない場合に作成
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+        print(f"フォルダを作成しました: {folder_path}")
+    else:
+        print(f"フォルダは既に存在します: {folder_path}")
+
+
+# 実行
+base_path = r"C:\Users\yukik\Downloads\test"  # フォルダを作成する親ディレクトリ
+create_folder_in_specific_path(base_path)
