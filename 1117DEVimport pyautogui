@@ -1,0 +1,22 @@
+import pyautogui
+import time
+
+# 画面サイズを取得
+screen_width, screen_height = pyautogui.size()
+
+# スタート地点（左上から少し離れた位置）
+start_x = 10  # 左端から10ピクセル右
+start_y = 10  # 上端から10ピクセル下
+
+# マウスをスタート地点に移動
+pyautogui.moveTo(start_x, start_y, duration=1)
+
+# 画面の上を少しずつ右へ移動
+for x in range(start_x, screen_width - 10, 100):  # 右端の10ピクセル手前まで移動
+    pyautogui.moveTo(x, start_y, duration=0.2)
+
+# 画面の右下へ移動
+pyautogui.moveTo(screen_width - 10, screen_height - 10, duration=2)
+
+# 画面の左下へ移動
+pyautogui.moveTo(10, screen_height - 10, duration=2)
