@@ -1,0 +1,56 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from bs4 import BeautifulSoup
+import requests
+import time
+
+
+def download_image(url, save_path):
+    """
+    画像を指定されたパスに保存する関数
+    """
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        with open(save_path, 'wb') as file:
+            for chunk in response.iter_content(1024):
+                file.write(chunk)
+        print(f"画像を保存しました: {save_path}")
+    else:
+        print("画像のダウンロードに失敗しました。")
+
+
+# 1. Selenium を使ってページにアクセス
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')  # ヘッドレスモードで起動（ブラウザを表示しない）
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+try:
+    url = "https://crea.bunshun.jp/articles/photo/39904"
+    driver.get(url)
+
+    # ページの読み込み待ち
+    time.sleep(5)
+
+    # BeautifulSoup でパース
+    soup = BeautifulSoup(driver.page_source, 'lxml')
+
+    # 2. XPath に基づいて画像要素を検索
+    img_element = soup.select_one(
+        '#content > div > div:nth-of-type(2) > section:nth-of-type(1) > p:nth-of-type(1) > a > img')
+
+    # 3. 画像の src 属性を取得
+    if img_element and 'src' in img_element.attrs:
+        img_url = img_element['src']
+        print(f"画像のURLを取得しました: {img_url}")
+
+        # 画像を保存
+        save_path = "ゆきねこ.jpg"
+        download_image(img_url, save_path)
+    else:
+        print("画像が見つかりませんでした。")
+
+finally:
+    # ブラウザを閉じる
+    driver.quit()
