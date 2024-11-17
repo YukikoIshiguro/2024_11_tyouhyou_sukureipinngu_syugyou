@@ -1,0 +1,52 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+import time
+
+
+def open_urls_in_multiple_tabs(url_list, delay=2):
+    """
+    複数のURLをSeleniumでChromeブラウザの複数タブに開く関数
+
+    Parameters:
+        url_list (list): 開きたいURLのリスト
+        delay (int): 各タブを開く間の待ち時間（秒）
+    """
+    # Chromeのオプションを設定
+    options = webdriver.ChromeOptions()
+    options.add_argument('--start-maximized')  # ブラウザを最大化して開く
+
+    # ChromeDriverを設定
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+    # 最初のURLを開く
+    driver.get(url_list[0])
+    print(f"Opened: {url_list[0]}")
+    time.sleep(delay)
+
+    # 2つ目以降のURLを新しいタブで開く
+    for url in url_list[1:]:
+        driver.execute_script("window.open('');")  # 新しいタブを作成
+        driver.switch_to.window(driver.window_handles[-1])  # 新しいタブに切り替え
+        driver.get(url)  # 指定したURLに移動
+        print(f"Opened: {url}")
+        time.sleep(delay)
+
+    # ブラウザは閉じずにタブを維持
+    print("すべてのタブが開きました。ブラウザを閉じるには、手動で操作してください。")
+    return driver  # ドライバーを戻して操作を続けられるようにする
+
+
+# 開きたいURLのリスト
+urls = [
+    "https://pyq.jp/dashboard/",
+    "https://menta.work/member/dashboard",
+    "https://diver.diveintocode.jp/dive_into_exam/2/result/649641",
+    "https://qiita.com/",
+    "https://www.youtube.com/"
+]
+
+# 関数を呼び出して、SeleniumでURLを複数タブで開く
+driver = open_urls_in_multiple_tabs(urls)
+
+# ドライバーを手動で操作したい場合はそのまま操作可能
