@@ -1,0 +1,20 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
+
+# Chromeを起動（Selenium Managerが自動的にChromeDriverを管理）
+driver = webdriver.Chrome()
+
+# Googleにアクセス
+driver.get("https://www.google.co.jp")
+
+# アクティブな要素(検索テキストボックス)を取得し、入力して検索
+element = driver.switch_to.active_element
+element.send_keys("アクティブな要素に入力")
+element.send_keys(Keys.ENTER)
+
+# 結果が表示されるまで待機
+time.sleep(5)
+
+# ブラウザを閉じる
+driver.quit()
