@@ -1,0 +1,67 @@
+import fitz  # PyMuPDFをインポート
+import os
+import time
+
+# PDFファイルのパス
+pdf_path = 'C:/Users/yukik/Desktop/1112kakidasirist.pdf'
+# 保存先のテキストファイルパス
+output_txt_path = r'C:\Users\yukik\Desktop\kakidasi.txt'
+# スクリーンショット画像の保存先フォルダ
+screenshot_folder = r'C:\Users\yukik\Desktop\kakidasi_images'
+
+# 出力先フォルダを確認して作成する
+output_folder = os.path.dirname(output_txt_path)
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+    print(f"フォルダ '{output_folder}' を作成しました。")
+
+if not os.path.exists(screenshot_folder):
+    os.makedirs(screenshot_folder)
+    print(f"フォルダ '{screenshot_folder}' を作成しました。")
+
+try:
+    # PDFを開いてテキストを抽出
+    print(f"PDFファイル '{pdf_path}' を開いています...")
+    with fitz.open(pdf_path) as pdf:
+        with open(output_txt_path, 'w', encoding='utf-8') as output_file:
+            print(f"出力ファイル '{output_txt_path}' を作成しています...")
+            for page_num in range(pdf.page_count):
+                print(f"ページ {page_num + 1} を処理しています...")
+
+                # ページを取得
+                page = pdf[page_num]
+
+                # レイアウトを保ちながらテキストを抽出
+                text = page.get_text("text_with_layout")
+                # テキストを保存
+                output_file.write(f"--- Page {page_num + 1} ---\n")
+                output_file.write(text)
+                output_file.write("\n\n")
+
+                # スクリーンショット（画像）を保存
+                image_path = os.path.join(screenshot_folder, f'page_{page_num + 1}.png')
+                success = False
+
+                for attempt in range(3):  # 最大3回まで試行
+                    try:
+                        print(f"スクリーンショットの試行 {attempt + 1} ...")
+                        pix = page.get_pixmap()
+                        pix.save(image_path)
+                        print(f"ページ {page_num + 1} のスクリーンショットを保存しました: {image_path}")
+                        success = True
+                        break
+                    except Exception as screenshot_error:
+                        print(f"スクリーンショット失敗: {screenshot_error}")
+                        if attempt < 2:  # 2回までリトライ
+                            time.sleep(2)  # 待機時間（秒）
+                            print("再試行しています...")
+                        else:
+                            print(f"ページ {page_num + 1} のスクリーンショットをスキップします。")
+                
+                if not success:
+                    output_file.write(f"--- Page {page_num + 1} のスクリーンショット取得失敗 ---\n\n")
+
+            print("すべてのページを処理しました。")
+    print("テキスト抽出とスクリーンショット保存が完了しました。")
+except Exception as e:
+    print(f"エラーが発生しました: {e}")
