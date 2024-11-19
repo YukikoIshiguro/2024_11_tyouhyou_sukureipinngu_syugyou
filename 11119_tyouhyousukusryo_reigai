@@ -1,0 +1,29 @@
+import pyautogui
+from PIL import Image, UnidentifiedImageError
+
+# スクリーンショットを撮る範囲を指定 (x, y, width, height)
+x, y, width, height = 100, 100, 500, 400  # 必要に応じて変更
+
+try:
+    # スクリーンショットを範囲指定して取得
+    screenshot = pyautogui.screenshot(region=(x, y, width, height))
+
+    # スクリーンショットを保存する
+    screenshot.save("screenshot.png")
+    print("スクリーンショットを保存しました。")
+
+    # スクリーンショットを表示（任意）
+    screenshot.show()
+
+except pyautogui.FailSafeException:
+    print("FailSafeException: マウスが左上隅に移動しました。処理を中断します。")
+
+except ValueError as ve:
+    print(f"ValueError: 範囲の指定が無効です。範囲を確認してください。\n詳細: {ve}")
+
+except UnidentifiedImageError as ui:
+    print(f"UnidentifiedImageError: スクリーンショットを正しく取得できませんでした。\n詳細: {ui}")
+
+except Exception as e:
+    print(f"予期しないエラーが発生しました:\n{e}")
+# スクショエラーの例外1119 1119tyouhyousukusyoreigai
