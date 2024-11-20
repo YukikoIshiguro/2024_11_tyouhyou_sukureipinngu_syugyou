@@ -1,0 +1,15 @@
+import pyautogui
+def move_mouse(x, y, duration=0.5):
+    """
+    マウスを指定した座標に移動する関数。
+    
+    Args:
+        x (int): 移動先のx座標。
+        y (int): 移動先のy座標。
+        duration (float): 移動にかける時間（秒）。
+    """
+    pyautogui.moveTo(x, y, duration=duration)
+    print(f"マウスを ({x}, {y}) に移動しました。")
+
+
+move_mouse(500, 500)  # マウスを(500, 500)に移動
