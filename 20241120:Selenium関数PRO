@@ -1,0 +1,46 @@
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+
+
+def open_browser():
+    """
+    空のブラウザを開く関数。
+
+    Returns:
+        WebDriver: WebDriverオブジェクト。
+    """
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service)
+    return driver
+
+
+def open_url(driver, url):
+    """
+    指定したURLを開く関数。
+
+    Args:
+        driver (WebDriver): WebDriverオブジェクト。
+        url (str): 開きたいWebページのURL。
+    """
+    driver.get(url)
+    print(f"URLを開きました: {url}")
+
+
+def take_screenshot(driver, filename="screenshot.png"):
+    """
+    現在のページのスクリーンショットを撮影して保存する関数。
+
+    Args:
+        driver (WebDriver): WebDriverオブジェクト。
+        filename (str): スクリーンショットの保存先（デフォルトは 'screenshot.png'）。
+    """
+    driver.save_screenshot(filename)
+    print(f"スクリーンショットを保存しました: {filename}")
+
+
+# メイン処理
+driver = open_browser()  # ブラウザを開く
+open_url(driver, "https://www.nekobu.com/")  # URLを開く
+take_screenshot(driver, "猫フェリシモ_screenshot.png")  # スクリーンショットを撮影
+driver.quit()  # ブラウザを閉じる
