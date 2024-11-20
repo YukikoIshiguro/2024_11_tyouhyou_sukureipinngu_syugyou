@@ -1,0 +1,52 @@
+
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+import pyautogui
+import time
+
+
+def setup_driver():
+    """
+    WebDriverを初期化する関数。
+
+    Returns:
+        WebDriver: 初期化済みのWebDriverオブジェクト。
+    """
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service)
+    return driver
+
+
+def open_url(driver, url):
+    """
+    指定したURLを開く関数。
+
+    Args:
+        driver (WebDriver): WebDriverオブジェクト。
+        url (str): 開きたいWebページのURL。
+    """
+    driver.get(url)
+    print(f"URLを開きました: {url}")
+
+
+def take_screenshot(filename="screenshot.png"):
+    """
+    現在の画面全体のスクリーンショットを保存する関数。
+
+    Args:
+        filename (str): 保存するファイル名。
+    """
+    pyautogui.screenshot(filename)
+    print(f"スクリーンショットを保存しました: {filename}")
+
+
+# メイン処理
+if __name__ == "__main__":
+    driver = setup_driver()  # WebDriverをセットアップ
+    try:
+        open_url(driver, "https://grapee.jp/1771313")  # URLを指定してページを開く
+        time.sleep(5)  # ページ確認のため少し待機
+        take_screenshot("grapee_screenshot.png")  # スクリーンショットを撮影して保存
+    finally:
+        driver.quit()  # ブラウザを閉じる
