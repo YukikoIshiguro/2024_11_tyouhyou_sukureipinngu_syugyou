@@ -1,0 +1,35 @@
+from PIL import ImageGrab
+import fitz  # PyMuPDF
+
+
+def screenshot_to_pdf(x1, y1, x2, y2, output_pdf):
+    """
+    スクリーンショットを撮影し、PDFとして保存する関数。
+
+    Args:
+        x1, y1 (int): スクリーンショット範囲の左上座標。
+        x2, y2 (int): スクリーンショット範囲の右下座標。
+        output_pdf (str): 出力するPDFファイル名。
+
+    Returns:
+        str: 保存したPDFのファイルパス。
+    """
+    # スクリーンショットを範囲指定で撮影
+    screenshot = ImageGrab.grab(bbox=(x1, y1, x2, y2))
+    temp_image = "temp_image.png"
+    screenshot.save(temp_image)  # 一時的に画像を保存
+
+    # PDFに画像を書き込む
+    pdf_document = fitz.open()  # 空のPDFを作成
+    img_rect = fitz.Rect(0, 0, screenshot.width, screenshot.height)  # 画像の大きさに合わせたページサイズ
+    img_page = pdf_document.new_page(width=img_rect.width, height=img_rect.height)  # 新しいページを追加
+    img_page.insert_image(img_rect, filename=temp_image)  # ページに画像を挿入
+    pdf_document.save(output_pdf)  # PDFを保存
+    pdf_document.close()
+
+    return output_pdf
+
+
+# 使用例
+output_pdf_path = screenshot_to_pdf(100, 100, 500, 400, "output.pdf")
+print(f"PDFとして保存しました: {output_pdf_path}")
