@@ -1,0 +1,33 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
+
+
+def search_google(query):
+    """
+    指定されたクエリでGoogle検索を実行します。
+
+    Parameters:
+    - query (str): 検索クエリ
+    """
+    # Chromeを起動（Selenium Managerが自動的にChromeDriverを管理）
+    driver = webdriver.Chrome()
+
+    try:
+        # Googleにアクセス
+        driver.get("https://www.google.co.jp")
+
+        # アクティブな要素(検索テキストボックス)を取得し、入力して検索
+        element = driver.switch_to.active_element
+        element.send_keys(query)
+        element.send_keys(Keys.ENTER)
+
+        # 結果が表示されるまで待機
+        time.sleep(5)
+    finally:
+        # ブラウザを閉じる
+        driver.quit()
+
+
+# 実行例: 「猫 面白い画像」で検索
+search_google("猫 面白い画像")
