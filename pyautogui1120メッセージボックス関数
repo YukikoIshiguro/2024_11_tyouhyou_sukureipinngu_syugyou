@@ -1,0 +1,16 @@
+import pyautogui
+
+
+def show_alert(text, title="PyAutoGUI"):
+    """
+    メッセージボックスを表示する関数。
+
+    Args:
+        text (str): メッセージ内容。
+        title (str): ボックスのタイトル（デフォルトは 'PyAutoGUI'）。
+    """
+    pyautogui.alert(text, title=title)
+    print(f"メッセージボックスを表示しました: {text}")
+
+
+show_alert("操作が完了しました！", "通知")
