@@ -1,0 +1,74 @@
+import fitz  # PyMuPDFをインポート
+import os
+import logging
+
+
+def setup_logger(log_file="extract_text_log.txt"):
+    """
+    ログを設定する関数。
+
+    Parameters:
+        log_file (str): ログを保存するファイル名（デフォルトは 'extract_text_log.txt'）。
+    """
+    logging.basicConfig(
+        filename=log_file,
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    logging.info("ログの設定が完了しました。")
+
+
+def extract_text_from_pdf(pdf_path, output_txt_path):
+    """
+    PDFからテキストを抽出し、テキストファイルに保存する関数。
+
+    Parameters:
+        pdf_path (str): 処理対象のPDFファイルのパス
+        output_txt_path (str): 抽出したテキストを保存するテキストファイルのパス
+    """
+    # ログ設定（デフォルトのログファイル名を使用）
+    setup_logger()
+
+    # 出力先のフォルダが存在しない場合、作成する
+    output_folder = os.path.dirname(output_txt_path)
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+        message = f"フォルダ '{output_folder}' を作成しました。"
+        print(message)
+        logging.info(message)
+
+    try:
+        # PDFを開いてテキストを抽出
+        logging.info(f"PDFファイル '{pdf_path}' を開いて処理を開始します。")
+        with fitz.open(pdf_path) as pdf:
+            with open(output_txt_path, 'w', encoding='utf-8') as output_file:
+                logging.info(f"出力ファイル '{output_txt_path}' を作成しました。")
+                for page_num in range(pdf.page_count):
+                    logging.info(f"ページ {page_num + 1} を処理中...")
+                    print(f"ページ {page_num + 1} を処理しています...")
+                    page = pdf[page_num]
+                    # レイアウトを保ちながらテキストを抽出
+                    text = page.get_text("text_with_layout")
+                    # ページごとに区切りを入れて保存
+                    output_file.write(f"--- Page {page_num + 1} ---\n")
+                    output_file.write(text)
+                    output_file.write("\n\n")
+                logging.info("すべてのページの処理が完了しました。")
+        logging.info("テキスト抽出が正常に終了しました。")
+        print("テキスト抽出が完了しました。")
+    except Exception as e:
+        error_message = f"エラーが発生しました: {e}"
+        print(error_message)
+        logging.error(error_message)
+
+
+# メイン処理部
+if __name__ == "__main__":
+    # PDFファイルのパス
+    pdf_path = 'C:/Users/yukik/Desktop/1112kakidasirist.pdf'
+    # 保存先のテキストファイルパス
+    output_txt_path = r'C:\Users\yukik\Desktop\kakidasi.txt'
+
+    # 関数を呼び出して実行
+    extract_text_from_pdf(pdf_path, output_txt_path)
