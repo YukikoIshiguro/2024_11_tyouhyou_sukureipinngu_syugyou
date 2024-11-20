@@ -1,0 +1,24 @@
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+
+def initialize_driver():
+    """
+    WebDriverを初期化する関数（webdriver-managerを使用）。
+    
+    Returns:
+        WebDriver: 初期化済みのWebDriver。
+    """
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service)
+    return driver
+
+# 実行例
+if __name__ == "__main__":
+    try:
+        driver = initialize_driver()
+        driver.get("https://www.google.com")
+        print("ページタイトル:", driver.title)
+    finally:
+        driver.quit()
+#webdriver-manager を使う方法で初期化Seleniumの11/20
