@@ -1,0 +1,38 @@
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+
+
+def setup_driver():
+    """
+    WebDriverを初期化する関数。
+    webdriver-managerを使ってChromeDriverを自動管理します。
+
+    Returns:
+        WebDriver: 初期化済みのWebDriverオブジェクト。
+    """
+    # webdriver-managerでChromeDriverを自動取得
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service)
+    return driver
+
+
+def open_website_and_print_title(url):
+    """
+    指定したURLを開き、ページタイトルを表示する関数。
+
+    Args:
+        url (str): 開きたいWebページのURL。
+    """
+    driver = setup_driver()  # WebDriverを準備
+    try:
+        driver.get(url)  # 指定したURLを開く
+        print(f"ページタイトル: {driver.title}")  # ページタイトルを表示
+    finally:
+        driver.quit()  # WebDriverを終了
+
+
+# 実行例
+if __name__ == "__main__":
+    open_website_and_print_title("https://news.yahoo.co.jp/articles/cca3086abc6bdbc0b486d24c52c12241ded0948b")
+# 2024/11/20:検索してページタイトルを取得するSeleniumの関数だよPRO
