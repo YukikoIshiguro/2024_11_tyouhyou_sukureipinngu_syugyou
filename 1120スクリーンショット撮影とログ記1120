@@ -1,0 +1,71 @@
+from PIL import ImageGrab
+import os
+import datetime
+import logging
+
+
+def setup_logger(log_file="screenshot_log.txt"):
+    """
+    ログを設定する関数。
+
+    Parameters:
+        log_file (str): ログを保存するファイル名（デフォルトは 'screenshot_log.txt'）。
+    """
+    logging.basicConfig(
+        filename=log_file,
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
+    logging.info("ログの設定が完了しました。")
+
+
+def take_screenshot_with_logging(output_dir="screenshots", log_file="screenshot_log.txt", filename=None):
+    """
+    スクリーンショットを撮影し、ログを記録する関数。
+
+    Parameters:
+        output_dir (str): 保存先のディレクトリ（デフォルトは 'screenshots'）。
+        log_file (str): ログを保存するファイル名（デフォルトは 'screenshot_log.txt'）。
+        filename (str): 保存するファイル名（デフォルトは現在の日時）。
+    """
+    # ログ設定
+    setup_logger(log_file)
+
+    try:
+        # ディレクトリが存在しなければ作成
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+            logging.info(f"ディレクトリを作成しました: {output_dir}")
+
+        # ファイル名の設定
+        if not filename:
+            filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".png"
+
+        filepath = os.path.join(output_dir, filename)
+
+        # スクリーンショットを撮影
+        screenshot = ImageGrab.grab()
+
+        # ファイルを保存
+        screenshot.save(filepath, "PNG")
+        logging.info(f"スクリーンショットを保存しました: {filepath}")
+        print(f"スクリーンショットを保存しました: {filepath}")
+
+    except PermissionError as e:
+        error_msg = "ディレクトリへのアクセス権限がありません。"
+        logging.error(f"{error_msg} - 詳細: {e}")
+        print(f"エラー: {error_msg}")
+    except FileNotFoundError as e:
+        error_msg = "ディレクトリが見つかりません。"
+        logging.error(f"{error_msg} - 詳細: {e}")
+        print(f"エラー: {error_msg}")
+    except Exception as e:
+        error_msg = f"予期しないエラーが発生しました。詳細: {e}"
+        logging.error(error_msg)
+        print(f"エラー: {error_msg}")
+
+
+# 実行例
+if __name__ == "__main__":
+    take_screenshot_with_logging()
