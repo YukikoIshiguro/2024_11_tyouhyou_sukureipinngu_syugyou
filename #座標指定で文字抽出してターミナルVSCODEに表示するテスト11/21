@@ -1,0 +1,66 @@
+import pyautogui
+import pyperclip  # クリップボード操作用
+import logging
+import time
+#座標指定で文字抽出してターミナルVSCODEに表示するテスト11/21
+# ログ設定
+logging.basicConfig(
+    filename='coordinate_copy.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+
+def copy_from_coordinates(x, y, delay=0.5):
+    """
+    指定した座標からデータをコピーし、ターミナルに表示する関数
+
+    :param x: X座標
+    :param y: Y座標
+    :param delay: 操作間の遅延時間（秒）
+    """
+    try:
+        # デバッグプリント: 座標と遅延を表示
+        print(f"[DEBUG] Moving to coordinates: ({x}, {y}) with delay {delay} seconds.")
+
+        # マウス移動とクリック
+        pyautogui.moveTo(x, y, duration=delay)
+        print(f"[DEBUG] Clicked at ({x}, {y}).")
+        pyautogui.click()
+        time.sleep(delay)  # 操作の遅延
+
+        # コピー操作（Ctrl+C）
+        print("[DEBUG] Performing Ctrl+C hotkey.")
+        pyautogui.hotkey("ctrl", "c")
+        time.sleep(0.5)  # クリップボードの内容が更新されるのを待機
+
+        # クリップボードの内容を取得
+        copied_text = pyperclip.paste()
+        print(f"[DEBUG] Copied text: {copied_text}")
+
+        # ログとターミナルに表示
+        logging.info(f"座標 ({x}, {y}) のデータをコピーしました: {copied_text}")
+        print(f"座標 ({x}, {y}) のデータをコピーしました: {copied_text}")
+
+    except Exception as e:
+        # デバッグプリント: エラー発生時の情報
+        print(f"[DEBUG] Error occurred: {e}")
+        logging.error(f"データコピー中にエラー: {e}")
+        print(f"指定座標のデータコピー中にエラーが発生しました: {e}")
+
+
+# サンプル使用例
+if __name__ == "__main__":
+    # デバッグプリント: プログラム開始
+    print("[DEBUG] Program started.")
+
+    # 座標を指定
+    x_coordinate = 300
+    y_coordinate = 300
+    print(f"[DEBUG] Target coordinates: ({x_coordinate}, {y_coordinate})")
+
+    # 関数を呼び出し
+    copy_from_coordinates(x_coordinate, y_coordinate)
+
+    # デバッグプリント: プログラム終了
+    print("[DEBUG] Program finished.")
