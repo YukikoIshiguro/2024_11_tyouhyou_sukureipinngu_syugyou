@@ -1,0 +1,17 @@
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
+
+def setup_driver():
+    """
+    WebDriverを初期化する関数。
+    
+    Returns:
+        WebDriver: 初期化済みのWebDriverオブジェクト。
+    """
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service)
+    return driver
