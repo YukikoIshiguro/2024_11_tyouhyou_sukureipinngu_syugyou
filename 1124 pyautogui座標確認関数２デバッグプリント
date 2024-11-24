@@ -1,0 +1,22 @@
+import pyautogui
+import time
+
+print("マウス位置取得プログラムを開始します！")  # プログラム開始時のメッセージ
+
+try:
+    iteration = 0  # ループ回数をカウント
+    while True:
+        # 現在のマウス位置を取得
+        pos = pyautogui.position()
+
+        # マウス位置をデバッグ用にプリント
+        print(f"[DEBUG] ループ回数: {iteration} | 現在のマウス位置: {pos}", end="\r")
+
+        # ループ回数を増やす
+        iteration += 1
+
+        # 少し待機（0.1秒間隔で更新）
+        time.sleep(0.1)
+except KeyboardInterrupt:
+    # Ctrl+Cで終了されたときの処理
+    print("\nプログラムを終了します。お疲れ様でした！")  # 終了メッセージ
