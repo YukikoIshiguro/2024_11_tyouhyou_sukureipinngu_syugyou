@@ -1,0 +1,7 @@
+import pyautogui
+import time
+# 現在のマウス位置探すよ！
+while True:
+    pos = pyautogui.position()  # マウスの現在位置を取得
+    print(f"現在のマウス位置: {pos}", end="\r")  # 現在の座標を同じ行に表示
+    time.sleep(0.1)  # 少し待機（0.1秒間隔で更新）
