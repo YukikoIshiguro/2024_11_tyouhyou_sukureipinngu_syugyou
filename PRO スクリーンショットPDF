@@ -1,0 +1,50 @@
+import pyautogui
+import time
+#スクリーンショットをPDFで保存、デスクトップに。
+
+def move_mouse_and_click(x, y, duration=0.5, click_type="left"):
+    """
+    マウスを指定した座標に移動してクリックする関数。
+
+    Args:
+        x (int): 移動先のx座標。
+        y (int): 移動先のy座標。
+        duration (float): 移動にかける時間（秒）。
+        click_type (str): "left"（左クリック）または "right"（右クリック）を指定。
+    """
+    pyautogui.moveTo(x, y, duration=duration)
+    print(f"[INFO] マウスを ({x}, {y}) に移動しました。")
+
+    if click_type == "left":
+        pyautogui.click()
+        print("[INFO] 左クリックしました。")
+    elif click_type == "right":
+        pyautogui.rightClick()
+        print("[INFO] 右クリックしました。")
+    else:
+        print("[WARNING] 無効なクリックタイプです。クリックをスキップしました。")
+
+
+if __name__ == "__main__":
+    print("[INFO] プログラムを開始します。")
+
+    try:
+        # デバッグ情報: 画面サイズの取得
+        screen_width, screen_height = pyautogui.size()
+        print(f"[DEBUG] 画面サイズ: 幅={screen_width}, 高さ={screen_height}")
+
+        # 移動先座標
+        move_to_x = screen_width // 2  # 画面の中央
+        move_to_y = screen_height // 2
+
+        # デバッグメッセージ
+        print("[DEBUG] 3秒後にマウスを移動してクリックします。")
+        time.sleep(3)  # ユーザーが準備するための待機時間
+
+        # マウス移動とクリック
+        move_mouse_and_click(move_to_x, move_to_y, duration=1.0, click_type="left")
+
+    except Exception as e:
+        print(f"[ERROR] マウス操作中にエラーが発生しました: {e}")
+
+    print("[INFO] プログラムを終了します。")
