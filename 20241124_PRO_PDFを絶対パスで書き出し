@@ -1,0 +1,59 @@
+import fitz  # PyMuPDFをインポート
+import os
+import logging
+
+
+def setup_logger(log_file="extract_text_log.txt"):
+    """
+    ログを設定する関数。
+    """
+    logging.basicConfig(
+        filename=log_file,
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    logging.info("ログの設定が完了しました。")
+
+
+def extract_text_from_pdf(pdf_path, output_txt_path):
+    """
+    PDFからテキストを抽出する関数。
+    """
+    setup_logger()
+    output_folder = os.path.dirname(output_txt_path)
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+        logging.info(f"フォルダ '{output_folder}' を作成しました。")
+
+    try:
+        logging.info(f"PDFファイル '{pdf_path}' を開いて処理を開始します。")
+        with fitz.open(pdf_path) as pdf:
+            with open(output_txt_path, 'w', encoding='utf-8') as output_file:
+                for page_num in range(pdf.page_count):
+                    logging.info(f"ページ {page_num + 1} を処理中...")
+                    page = pdf[page_num]
+                    text = page.get_text("text_with_layout")
+                    output_file.write(f"--- Page {page_num + 1} ---\n")
+                    output_file.write(text)
+                    output_file.write("\n\n")
+        logging.info("テキスト抽出が正常に終了しました。")
+        print(f"テキスト抽出が完了しました: {output_txt_path}")
+    except Exception as e:
+        logging.error(f"エラーが発生しました: {e}")
+        print(f"エラーが発生しました: {e}")
+
+
+if __name__ == "__main__":
+    # 現在のスクリプトがあるディレクトリを取得
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    # PDFファイル名と出力ファイル名を指定
+    pdf_path = os.path.join(base_dir, '1112kakidasirist.pdf')  # 拡張子を追加
+    output_txt_path = os.path.join(base_dir, 'kakidasi.txt')
+
+    # PDFファイルの存在確認
+    if not os.path.exists(pdf_path):
+        print(f"PDFファイルが見つかりません: {pdf_path}")
+    else:
+        extract_text_from_pdf(pdf_path, output_txt_path)
