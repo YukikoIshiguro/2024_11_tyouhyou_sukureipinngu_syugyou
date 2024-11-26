@@ -1,0 +1,67 @@
+import logging
+import pyautogui
+import time
+
+# ログの設定
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+
+def logging_decorator(func):
+    def wrapper(*args, **kwargs):
+        logging.info(f"Executing {func.__name__} with args: {args}, kwargs: {kwargs}")
+        result = func(*args, **kwargs)
+        logging.info(f"Finished executing {func.__name__}")
+        return result
+
+    return wrapper
+
+
+@logging_decorator
+def add(a, b):
+    return a + b
+
+
+@logging_decorator
+def subtract(a, b):
+    return a - b
+
+
+@logging_decorator
+def move_mouse(x, y, duration=0.5):
+    """
+    マウスを指定した座標に移動する関数。
+
+    Args:
+        x (int): 移動先のx座標。
+        y (int): 移動先のy座標。
+        duration (float): 移動にかける時間（秒）。
+    """
+    pyautogui.moveTo(x, y, duration=duration)
+    print(f"[INFO] マウスを ({x}, {y}) に移動しました。")
+
+
+if __name__ == "__main__":
+    print("[INFO] プログラムを開始します。")
+
+    try:
+        # デバッグ情報: 画面サイズの取得
+        screen_width, screen_height = pyautogui.size()
+        print(f"[DEBUG] 画面サイズ: 幅={screen_width}, 高さ={screen_height}")
+
+        # ユーザーに座標の入力を求める
+        move_to_x = int(input("移動先のx座標を入力してください: "))
+        move_to_y = int(input("移動先のy座標を入力してください: "))
+
+        # デバッグメッセージ
+        print("[DEBUG] 3秒後にマウスを移動します。")
+        time.sleep(3)  # ユーザーが準備するための待機時間
+
+        # マウス移動
+        move_mouse(move_to_x, move_to_y)
+
+    except Exception as e:
+        print(f"[ERROR] マウス移動中にエラーが発生しました: {e}")
+
+    print("[INFO] プログラムを終了します。")
