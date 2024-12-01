@@ -1,0 +1,111 @@
+import pytesseract
+from PIL import Image
+import os
+import csv
+
+
+# 20241201_Tesseractで「easyocr」というライブラリをつかって画像の文字抽出をして、ExcelのＣＳＶ形式で保存する。
+# 今後の課題：文字抽出の精度。
+# 全体の流れはｏｋ。
+# 複数のインプット画像の読み取りとＣＳＶ形式で文字抽出の基本は出来る。
+# Tesseractのパスを設定
+pytesseract.pytesseract.tesseract_cmd = (
+    r"C:\Users\yukik\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
+)
+
+
+# 画像が保存されているディレクトリのパスを指定
+image_folder = r"C:\Users\yukik\Desktop\ocrtest1128"
+
+
+# ディレクトリ内のすべての画像ファイルを取得
+image_files = [
+    f for f in os.listdir(image_folder) if f.endswith(("png", "jpg", "jpeg"))
+]
+
+
+# CSVファイルに書き込む準備
+csv_file_path = r"C:\Users\yukik\Desktop\ocrtest1128\ocr_results.csv"
+
+
+# ヘッダーを含むCSVファイルを開く
+with open(csv_file_path, mode="w", newline="", encoding="utf-8-sig") as csvfile:
+    fieldnames = ["Image File", "OCR Text"]  # 必要に応じて列名を変更
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+
+    # ヘッダー行の書き込み
+    writer.writeheader()
+
+
+    # 画像ごとにOCRを実行
+    for image_file in image_files:
+        # 画像のフルパスを作成
+        image_path = os.path.join(image_folder, image_file)
+
+
+        # 画像を開く
+        image = Image.open(image_path)
+
+
+        # OCRを実行
+        text = pytesseract.image_to_string(image, lang="jpn")
+
+
+        # OCR結果をCSVに書き込む
+        writer.writerow({"Image File": image_file, "OCR Text": text})
+
+
+print(f"OCR結果がCSVファイルに保存されました: {csv_file_path}")
+
+
+import pytesseract
+from PIL import Image
+import os
+import csv
+
+# 20241201_Tesseractで「easyocr」というライブラリをつかって画像の文字抽出をして、ExcelのＣＳＶ形式で保存する。
+# 今後の課題：文字抽出の精度。
+# 全体の流れはｏｋ。
+# 複数のインプット画像の読み取りとＣＳＶ形式で文字抽出の基本は出来る。
+# Tesseractのパスを設定
+pytesseract.pytesseract.tesseract_cmd = (
+    r"C:\Users\yukik\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
+)
+
+# 画像が保存されているディレクトリのパスを指定
+image_folder = r"C:\Users\yukik\Desktop\ocrtest1128"
+
+# ディレクトリ内のすべての画像ファイルを取得
+image_files = [
+    f for f in os.listdir(image_folder) if f.endswith(("png", "jpg", "jpeg"))
+]
+
+# CSVファイルに書き込む準備
+csv_file_path = r"C:\Users\yukik\Desktop\ocrtest1128\ocr_results.csv"
+
+# ヘッダーを含むCSVファイルを開く
+with open(csv_file_path, mode="w", newline="", encoding="utf-8-sig") as csvfile:
+    fieldnames = ["Image File", "OCR Text"]  # 必要に応じて列名を変更
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+    # ヘッダー行の書き込み
+    writer.writeheader()
+
+    # 画像ごとにOCRを実行
+    for image_file in image_files:
+        # 画像のフルパスを作成
+        image_path = os.path.join(image_folder, image_file)
+
+        # 画像を開く
+        image = Image.open(image_path)
+
+        # OCRを実行
+        text = pytesseract.image_to_string(image, lang="jpn")
+
+        # OCR結果をCSVに書き込む
+        writer.writerow({"Image File": image_file, "OCR Text": text})
+
+print(f"OCR結果がCSVファイルに保存されました: {csv_file_path}")
+
+
