@@ -1,0 +1,43 @@
+import PyPDF2
+import pandas as pd
+import re
+
+# 2024/12/01PyPDF2でPDFがデジタルテキストの場合の対応＝＞csvファイルに保存。テストok
+# PDFファイルのパスを指定
+# PDFファイルのパスを指定（Raw文字列を使用）
+file_path = r"C:\Users\yukik\Downloads\purinpdf.pdf"
+
+# PDFを読み込む
+with open(file_path, "rb") as file:
+    reader = PyPDF2.PdfReader(file)
+
+    # 全ページのテキストを格納するリスト
+    text_data = []
+
+    # 各ページのテキストを抽出
+    for page_num in range(len(reader.pages)):
+        page = reader.pages[page_num]
+        text = page.extract_text()
+        if text:
+            text_data.append(text)
+
+# テキストデータを行ごとに分割して整理
+processed_data = []
+for page_text in text_data:
+    # 各ページのテキストを行ごとに分割
+    lines = page_text.split("\n")
+    for line in lines:
+        # 空行や不要な特殊文字を削除
+        cleaned_line = re.sub(r"[^\w\s.,-]", "", line).strip()
+        if cleaned_line:
+            processed_data.append(cleaned_line)
+
+# DataFrameに変換（ここでは列名を仮定しています）
+# 必要に応じて列の形式や処理を調整してください
+df = pd.DataFrame({"Content": processed_data})
+
+# CSVファイルに保存
+csv_file_path = "output.csv"  # 保存するCSVファイル名
+df.to_csv(csv_file_path, index=False, encoding="utf-8-sig")  # UTF-8で保存
+
+print(f"データをCSVファイルとして保存しました: {csv_file_path}")
