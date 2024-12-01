@@ -1,0 +1,28 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time  # 待機用
+
+# Chromeドライバーを初期化
+driver = webdriver.Chrome()
+
+try:
+    # 適当なURLを設定 (ここではGoogle)
+    driver.get("https://www.google.com")
+
+    # ボタンまたは入力フィールドの要素を取得 (Googleの検索ボックスをIDで取得)
+    element = driver.find_element(By.NAME, "q")  # Google検索ボックス
+
+    # 検索ボックスにテキストを入力してEnterキーを送信
+    element.send_keys("Selenium Python 動作確認")
+    element.send_keys(Keys.ENTER)
+
+    # 結果を確認するため少し待機
+    time.sleep(5)
+
+    # デバッグ用メッセージ
+    print("検索操作を実行しました！")
+
+finally:
+    # ブラウザを終了
+    driver.quit()
