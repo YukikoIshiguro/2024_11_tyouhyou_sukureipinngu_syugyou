@@ -1,0 +1,38 @@
+import PyPDF2
+import pandas as pd
+import re
+
+# 2024/12/01/1201_1_texttest
+#テストOK
+# PDFファイルのパスを指定
+file_path = (
+    "C:\\Users\\yukik\\Downloads\\purinpdf.pdf"  # ここを対象のPDFファイルのパスに変更してください
+)
+
+# PDFファイルを読み込む
+with open(file_path, "rb") as file:
+    reader = PyPDF2.PdfReader(file)
+
+    # 全ページのテキストを格納するリスト
+    text_data = []
+
+    # 各ページのテキストを抽出
+    for page_num in range(len(reader.pages)):
+        page = reader.pages[page_num]
+        text = page.extract_text()
+        if text:  # テキストが抽出できた場合
+            text_data.append(text)
+
+# テキストを結合して保存
+with open("output_text.txt", "w", encoding="utf-8") as f:
+    f.write("\n".join(text_data))
+
+# 結果を表示
+print(text_data)
+
+# DataFrameに変換（必要に応じて）
+# 例: 年とイベントのデータを扱う場合（適宜カスタマイズが必要）
+# df = pd.DataFrame(text_data, columns=['Year', 'Event'])
+
+# DataFrameの表示
+# print(df)
