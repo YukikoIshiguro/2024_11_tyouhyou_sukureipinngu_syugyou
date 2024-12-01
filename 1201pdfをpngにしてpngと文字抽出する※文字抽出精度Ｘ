@@ -1,0 +1,51 @@
+import os
+import fitz  # PyMuPDF
+import pytesseract
+from PIL import Image
+
+# Tesseractのパスを設定（必要に応じて変更）
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\yukik\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
+
+# 入力PDFファイルと出力ディレクトリ
+pdf_path = r"C:\Users\yukik\Downloads\purinpdf.pdf"
+output_dir = r"C:\Users\yukik\Downloads\1201OUTPUT"
+
+# 出力ディレクトリを作成（存在しない場合）
+os.makedirs(output_dir, exist_ok=True)
+
+try:
+    # PDFを読み込む
+    pdf_document = fitz.open(pdf_path)
+    print("PDFを画像に変換中...")
+
+    for page_number in range(len(pdf_document)):
+        # ページを取得
+        page = pdf_document.load_page(page_number)
+        
+        # ページを画像に変換
+        pix = page.get_pixmap(dpi=300)  # 解像度を指定（300 DPI）
+        image_filename = os.path.join(output_dir, f"page_{page_number + 1}.png")
+        pix.save(image_filename)
+        print(f"画像保存: {image_filename}")
+
+        # 画像を開く
+        image = Image.open(image_filename)
+
+        # OCRを実行
+        print(f"OCR解析中: {image_filename}")
+        text = pytesseract.image_to_string(image, lang="jpn")
+
+        # テキストを保存
+        text_filename = os.path.join(output_dir, f"page_{page_number + 1}.txt")
+        with open(text_filename, "w", encoding="utf-8") as text_file:
+            text_file.write(text)
+        print(f"テキスト保存: {text_filename}")
+
+    pdf_document.close()
+    print("PDFの全ページを処理しました。")
+
+except FileNotFoundError:
+    print(f"指定されたPDFファイルが見つかりません: {pdf_path}")
+
+except Exception as e:
+    print(f"エラーが発生しました: {e}")
