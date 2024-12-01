@@ -1,0 +1,32 @@
+import fitz  # PyMuPDF
+import os
+#pdfをpngにして指定パスのフォルダに保存する。
+# 入力PDFファイルと出力ディレクトリ
+pdf_path = r"C:\Users\yukik\Downloads\purinpdf.pdf"
+output_dir = r"C:\Users\yukik\Downloads\1201OUTPUT"
+
+# 出力フォルダが存在しない場合は作成
+os.makedirs(output_dir, exist_ok=True)
+
+try:
+    # PDFを開く
+    pdf_document = fitz.open(pdf_path)
+    print(f"{pdf_document.page_count} ページのPDFを処理します。")
+
+    # 各ページを画像として保存
+    for page_number in range(pdf_document.page_count):
+        page = pdf_document[page_number]
+        # 解像度 (dpi) を設定してピクセル画像としてレンダリング
+        pix = page.get_pixmap(dpi=300)
+
+        # 出力ファイルパス
+        output_path = os.path.join(output_dir, f"page_{page_number + 1}.png")
+
+        # 画像を保存
+        pix.save(output_path)
+        print(f"ページ {page_number + 1} を画像として保存しました: {output_path}")
+
+    print("すべてのページを画像に変換しました。")
+
+except Exception as e:
+    print(f"PDF処理中にエラーが発生しました: {e}")
