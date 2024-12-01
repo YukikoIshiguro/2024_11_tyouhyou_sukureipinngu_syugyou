@@ -1,0 +1,37 @@
+import pytesseract
+from PIL import Image
+import os
+
+# Tesseractのパスを設定
+pytesseract.pytesseract.tesseract_cmd = (
+    r"C:\Users\yukik\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
+)
+
+# 画像が保存されているディレクトリのパスを指定
+image_folder = r"C:\Users\yukik\Desktop\ocrtest1128"
+
+# ディレクトリ内のすべての画像ファイルを取得
+image_files = [
+    f for f in os.listdir(image_folder) if f.endswith(("png", "jpg", "jpeg"))
+]
+
+# メモの保存先ファイルパスを指定
+memo_file_path = r"C:\Users\yukik\Downloads\12011831_OUTPUT_GAZOU.txt"
+
+# メモをファイルに書き込む
+with open(memo_file_path, mode="w", encoding="utf-8-sig") as memo_file:
+    # 画像ごとにOCRを実行
+    for image_file in image_files:
+        # 画像のフルパスを作成
+        image_path = os.path.join(image_folder, image_file)
+
+        # 画像を開く
+        image = Image.open(image_path)
+
+        # OCRを実行
+        text = pytesseract.image_to_string(image, lang="jpn")
+
+        # メモに書き込む
+        memo_file.write(f"Image File: {image_file}\nOCR Text: {text}\n\n")
+
+print(f"OCR結果がテキストファイルに保存されました: {memo_file_path}")
