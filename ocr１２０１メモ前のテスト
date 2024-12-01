@@ -1,0 +1,36 @@
+import pytesseract
+from PIL import Image
+import os
+
+# Tesseractのパスを設定
+pytesseract.pytesseract.tesseract_cmd = (
+    r"C:\Users\yukik\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
+)
+
+# 画像が保存されているディレクトリのパスを指定
+image_folder = r"C:\Users\yukik\Desktop\ocrtest1128"
+
+# ディレクトリ内のすべての画像ファイルを取得
+image_files = [
+    f for f in os.listdir(image_folder) if f.endswith(("png", "jpg", "jpeg"))
+]
+
+# メモに結果を保存する準備
+memo = ""
+
+# 画像ごとにOCRを実行
+for image_file in image_files:
+    # 画像のフルパスを作成
+    image_path = os.path.join(image_folder, image_file)
+
+    # 画像を開く
+    image = Image.open(image_path)
+
+    # OCRを実行
+    text = pytesseract.image_to_string(image, lang="jpn")
+
+    # メモに結果を追加
+    memo += f"Image File: {image_file}\nOCR Text: {text}\n\n"
+
+# メモを表示
+print(memo)
